@@ -1,0 +1,37 @@
+title: Scheduled Task Created to Run From a User-Writable Path or Shell
+id: 91c288fc-3293-433b-87d6-1b37bee451d2
+status: experimental
+description: |
+  schtasks.exe creating a task that runs a shell, or a program in a folder any user can write
+  to. Attackers use scheduled tasks to survive reboots. Plain task creation is common, so this
+  rule only fires when the task's target looks like malware staging.
+references:
+  - https://attack.mitre.org/techniques/T1053/005/
+  - https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1053.005/T1053.005.md
+author: Sincerely Brittany
+date: 2026-10-21
+tags:
+  - attack.persistence
+  - attack.t1053.005
+logsource:
+  product: windows
+  category: process_creation
+  service: sysmon  # Event ID 1
+detection:
+  schtasks_create:
+    Image|endswith: '\schtasks.exe'
+    CommandLine|contains: '/create'
+  risky_target:
+    CommandLine|contains:
+      - '\AppData\'
+      - '\Temp\'
+      - '\Users\Public\'
+      - '\ProgramData\'
+      - 'powershell'
+      - 'cmd /c'
+      - 'cmd.exe /c'
+      - 'mshta'
+  condition: schtasks_create and risky_target
+falsepositives:
+  - Per-user software updaters installed under AppData (some chat and browser apps); allowlist by task name
+level: medium

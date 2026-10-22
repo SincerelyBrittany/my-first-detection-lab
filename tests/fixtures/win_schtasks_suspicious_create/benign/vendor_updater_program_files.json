@@ -1,0 +1,12 @@
+{
+  "EventID": 1,
+  "Channel": "Microsoft-Windows-Sysmon/Operational",
+  "Computer": "WIN-LAB01",
+  "UtcTime": "2026-10-21 14:03:11.512",
+  "Image": "C:\\Windows\\System32\\schtasks.exe",
+  "CommandLine": "schtasks /create /sc daily /tn \"VendorUpdate\" /tr \"C:\\Program Files\\Vendor\\update.exe\"",
+  "ParentImage": "C:\\Program Files\\Vendor\\installer.exe",
+  "ParentCommandLine": "",
+  "User": "LAB\\analyst",
+  "IntegrityLevel": "Medium"
+}

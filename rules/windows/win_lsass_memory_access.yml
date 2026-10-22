@@ -1,0 +1,37 @@
+title: Suspicious Access to LSASS Memory
+id: cfec95a8-12d4-44a2-85f6-9e53cbc3ffd3
+status: experimental
+description: |
+  A process opened LSASS (where Windows keeps credentials in memory) with the access rights
+  credential dumpers like Mimikatz need. Microsoft Defender scans LSASS the same way, so it
+  is filtered out; that filter is the tuning step documented in the README.
+references:
+  - https://attack.mitre.org/techniques/T1003/001/
+  - https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1003.001/T1003.001.md
+author: Sincerely Brittany
+date: 2026-10-21
+tags:
+  - attack.credential-access
+  - attack.t1003.001
+logsource:
+  product: windows
+  category: process_access
+  service: sysmon  # Event ID 10
+detection:
+  lsass_access:
+    TargetImage|endswith: '\lsass.exe'
+    GrantedAccess:
+      - '0x1010'
+      - '0x1410'
+      - '0x1438'
+      - '0x143a'
+      - '0x1fffff'
+  known_good:
+    SourceImage|endswith:
+      - '\MsMpEng.exe'      # Microsoft Defender
+      - '\wininit.exe'
+      - '\csrss.exe'
+  condition: lsass_access and not known_good
+falsepositives:
+  - Other EDR or backup agents that read LSASS; add their full path to known_good after confirming
+level: high

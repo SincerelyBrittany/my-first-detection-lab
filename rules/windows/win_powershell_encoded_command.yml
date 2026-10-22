@@ -1,0 +1,36 @@
+title: PowerShell Run With an Encoded Command
+id: a73b86c4-120b-4c47-88a2-b457c03a5c73
+status: experimental
+description: |
+  PowerShell started with -EncodedCommand (or a short form of it). Attackers base64-encode
+  commands to hide them from a quick look at process logs.
+references:
+  - https://attack.mitre.org/techniques/T1059/001/
+  - https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1059.001/T1059.001.md
+author: Sincerely Brittany
+date: 2026-10-21
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - attack.defense-evasion
+  - attack.t1027
+logsource:
+  product: windows
+  category: process_creation
+  service: sysmon  # Event ID 1
+detection:
+  powershell:
+    Image|endswith:
+      - '\powershell.exe'
+      - '\pwsh.exe'
+  encoded_flag:
+    # " -e " needs the trailing space so -ExecutionPolicy doesn't match.
+    CommandLine|contains:
+      - ' -enc'
+      - ' -ec '
+      - ' -e '
+      - ' /enc'
+  condition: powershell and encoded_flag
+falsepositives:
+  - Some management tools (SCCM, Intune scripts) pass encoded commands; tune by ParentImage
+level: medium

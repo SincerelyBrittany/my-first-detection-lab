@@ -1,0 +1,32 @@
+title: AWS CloudTrail Logging Stopped or Deleted
+id: 4c28921f-9feb-4229-9a52-050723aa80d5
+status: experimental
+description: |
+  Someone stopped, deleted or narrowed a CloudTrail trail. Attackers do this right after
+  getting in so their next steps aren't recorded. The event itself is still logged, so this
+  is often the last thing the trail sees.
+references:
+  - https://attack.mitre.org/techniques/T1562/008/
+  - https://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_StopLogging.html
+author: Sincerely Brittany
+date: 2026-10-21
+tags:
+  - attack.defense-evasion
+  - attack.t1562.008
+logsource:
+  product: aws
+  service: cloudtrail
+detection:
+  trail_tampering:
+    eventSource: cloudtrail.amazonaws.com
+    eventName:
+      - StopLogging
+      - DeleteTrail
+      - UpdateTrail
+      - PutEventSelectors
+  succeeded:
+    errorCode|exists: false
+  condition: trail_tampering and succeeded
+falsepositives:
+  - Planned changes to trail settings by the account's admins; confirm against change tickets
+level: high

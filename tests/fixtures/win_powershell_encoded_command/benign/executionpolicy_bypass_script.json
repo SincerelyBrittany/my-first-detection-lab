@@ -1,0 +1,12 @@
+{
+  "EventID": 1,
+  "Channel": "Microsoft-Windows-Sysmon/Operational",
+  "Computer": "WIN-LAB01",
+  "UtcTime": "2026-10-21 14:03:11.512",
+  "Image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+  "CommandLine": "powershell.exe -ExecutionPolicy Bypass -File C:\\Scripts\\backup.ps1",
+  "ParentImage": "C:\\Windows\\System32\\svchost.exe",
+  "ParentCommandLine": "",
+  "User": "LAB\\analyst",
+  "IntegrityLevel": "Medium"
+}

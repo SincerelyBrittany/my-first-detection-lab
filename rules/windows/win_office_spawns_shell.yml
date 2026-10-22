@@ -1,0 +1,42 @@
+title: Office App Spawns a Shell or Script Host
+id: 09183290-0dd5-4b13-9a8b-4a603a382140
+status: experimental
+description: |
+  Word, Excel, PowerPoint or Outlook starting a command shell or script host. This is the
+  usual next step after someone opens a malicious attachment from a phishing email, so it
+  pairs with PhishTriage: PhishTriage flags the email, this catches the attachment running.
+references:
+  - https://attack.mitre.org/techniques/T1204/002/
+  - https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1204.002/T1204.002.md
+author: Sincerely Brittany
+date: 2026-10-21
+tags:
+  - attack.execution
+  - attack.t1204.002
+  - attack.initial-access
+  - attack.t1566.001
+logsource:
+  product: windows
+  category: process_creation
+  service: sysmon  # Event ID 1
+detection:
+  office_parent:
+    ParentImage|endswith:
+      - '\winword.exe'
+      - '\excel.exe'
+      - '\powerpnt.exe'
+      - '\outlook.exe'
+  shell_child:
+    Image|endswith:
+      - '\cmd.exe'
+      - '\powershell.exe'
+      - '\pwsh.exe'
+      - '\wscript.exe'
+      - '\cscript.exe'
+      - '\mshta.exe'
+      - '\rundll32.exe'
+      - '\regsvr32.exe'
+  condition: office_parent and shell_child
+falsepositives:
+  - Office add-ins or macros a business relies on that legitimately call scripts; allowlist by CommandLine after review
+level: high

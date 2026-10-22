@@ -1,0 +1,33 @@
+title: AWS AdministratorAccess Attached to a User, Role or Group
+id: 56894ac2-862d-4591-9c80-04bf610c777b
+status: experimental
+description: |
+  The AWS-managed AdministratorAccess policy was attached to an IAM identity. An attacker
+  with limited IAM rights often does this to give themselves (or a new backdoor user) full
+  control of the account.
+references:
+  - https://attack.mitre.org/techniques/T1098/
+  - https://docs.aws.amazon.com/IAM/latest/APIReference/API_AttachUserPolicy.html
+author: Sincerely Brittany
+date: 2026-10-21
+tags:
+  - attack.persistence
+  - attack.privilege-escalation
+  - attack.t1098
+logsource:
+  product: aws
+  service: cloudtrail
+detection:
+  attach_policy:
+    eventSource: iam.amazonaws.com
+    eventName:
+      - AttachUserPolicy
+      - AttachRolePolicy
+      - AttachGroupPolicy
+    requestParameters.policyArn|endswith: ':policy/AdministratorAccess'
+  succeeded:
+    errorCode|exists: false
+  condition: attach_policy and succeeded
+falsepositives:
+  - Admins granting access during account setup or break-glass procedures; these should be rare and ticketed
+level: high

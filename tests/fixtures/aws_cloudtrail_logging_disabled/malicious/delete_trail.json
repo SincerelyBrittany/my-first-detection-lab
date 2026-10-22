@@ -1,0 +1,22 @@
+{
+  "eventVersion": "1.09",
+  "eventTime": "2026-10-21T15:20:07Z",
+  "eventSource": "cloudtrail.amazonaws.com",
+  "eventName": "DeleteTrail",
+  "awsRegion": "us-east-1",
+  "sourceIPAddress": "203.0.113.50",
+  "userAgent": "aws-cli/2.17.0",
+  "userIdentity": {
+    "type": "IAMUser",
+    "arn": "arn:aws:iam::111122223333:user/dev-intern",
+    "accountId": "111122223333",
+    "userName": "dev-intern"
+  },
+  "requestParameters": {
+    "name": "org-trail"
+  },
+  "responseElements": null,
+  "readOnly": false,
+  "eventType": "AwsApiCall",
+  "recipientAccountId": "111122223333"
+}
