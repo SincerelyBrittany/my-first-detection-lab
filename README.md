@@ -16,7 +16,7 @@ It's the follow-on to [PhishTriage](https://github.com/SincerelyBrittany/phishtr
 
 | Path | What it is |
 | --- | --- |
-| `rules/windows/` | Sigma rules for Sysmon process and memory-access events |
+| `rules/windows/` | Sigma rules for Sysmon and Windows Security log events |
 | `rules/aws/` | Sigma rules for AWS CloudTrail |
 | `tests/fixtures/<rule>/malicious/` | Events the rule **must** fire on |
 | `tests/fixtures/<rule>/benign/` | Normal activity the rule **must not** fire on |
@@ -35,6 +35,10 @@ It's the follow-on to [PhishTriage](https://github.com/SincerelyBrittany/phishtr
 | Scheduled task from a risky path | T1053.005 | Sysmon 1 | Persistence that survives reboots |
 | CloudTrail logging stopped | T1562.008 | CloudTrail | Attackers blind the logs right after getting in |
 | AdministratorAccess attached | T1098 | CloudTrail | Privilege escalation or a backdoor admin user |
+| Account locked out | T1110 | Security 4740 | Password guessing or spraying |
+| Security log cleared | T1070.001 | Security 1102 | Attackers erasing evidence |
+| Console login without MFA | T1078.004 | CloudTrail | A stolen password alone is enough to get in |
+| Console password created | T1098 | CloudTrail | Turning a user into a console account the attacker can log into |
 
 See [docs/coverage.md](docs/coverage.md) for the full map and the gaps.
 
@@ -50,9 +54,9 @@ rules/*.yml + tests/fixtures/  →  pytest in CI  →  can't merge a rule that m
 
 ## Results
 
-**Tests (synthetic events):** 6 rules, 25 fixtures (12 attack, 13 normal), 51 tests passing. Every rule fires on all of its attack events and none of its normal ones.
+**Tests (synthetic events):** 10 rules, 39 fixtures (17 attack, 22 normal), 67 tests passing. Every rule fires on all of its attack events and none of its normal ones.
 
-To check the tests can actually fail, I broke two rules on purpose: removing the Defender exclusion from the LSASS rule made the `defender_scan` fixture fail as a false positive, and dropping the `-e` short flag made the PowerShell rule miss `short_e_flag`. Both were caught.
+To check the tests can actually fail, I broke two rules on purpose: removing the Defender exclusion from the LSASS rule made the `defender_scan` fixture fail as a false positive, and dropping the `-e` short flag made the PowerShell rule miss `short_e_flag`. Both were caught. The same check on the MFA rule showed that without the SSO exclusion, a normal single sign-on login would alert.
 
 **Lab results (live runs):** fill this in as each Atomic Red Team or AWS test is run.
 
@@ -64,11 +68,16 @@ To check the tests can actually fail, I broke two rules on purpose: removing the
 | | T1204.002 | | | | |
 | | AWS StopLogging | | | | |
 | | AWS AttachUserPolicy (Admin) | | | | |
+| | T1110.001 (account lockout) | | | | |
+| | T1070.001 (clear Security log) | | | | |
+| | AWS console login without MFA | | | | |
+| | AWS CreateLoginProfile | | | | |
 
 ## Engineering decisions
 
 - **Every rule ships with tests.** CI requires at least one attack and one normal-activity fixture per rule, valid Sigma (checked with pySigma), ATT&CK tags and documented false positives.
 - **Tuning is visible.** The LSASS rule excludes Microsoft Defender, which scans LSASS with the same access rights credential dumpers use. That exclusion has its own fixture, so removing it breaks the build.
+- **SSO logins are excluded from the MFA rule.** Federated sign-ins report `MFAUsed: No` because the identity provider handles MFA, so alerting on them would be pure noise.
 - **Failed attempts don't alert.** The AWS rules ignore events with an `errorCode`: a denied `StopLogging` is interesting for hunting but isn't an incident, and including it would double the noise.
 - **Precision over recall for noisy events.** Scheduled task creation is common, so that rule only fires when the task runs a shell or something in a user-writable folder.
 - **A small evaluator instead of a full SIEM in CI.** `matcher.py` implements the common core of Sigma and has its own unit tests. Real SIEM queries come from `sigma-cli`, so the same rule file drives both.

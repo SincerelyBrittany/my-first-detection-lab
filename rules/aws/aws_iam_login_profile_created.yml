@@ -1,0 +1,28 @@
+title: AWS Console Password Created for an IAM User
+id: f7177ba5-a12a-4e57-b83d-b2e8128d8091
+status: experimental
+description: |
+  CreateLoginProfile gives an IAM user a console password. Attackers with IAM rights use it
+  to turn a programmatic-only user (or one they just created) into a console account they
+  can log into. It's rare outside onboarding, so it's worth a look every time.
+references:
+  - https://attack.mitre.org/techniques/T1098/
+  - https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateLoginProfile.html
+author: Sincerely Brittany
+date: 2026-10-22
+tags:
+  - attack.persistence
+  - attack.t1098
+logsource:
+  product: aws
+  service: cloudtrail
+detection:
+  login_profile:
+    eventSource: iam.amazonaws.com
+    eventName: CreateLoginProfile
+  succeeded:
+    errorCode|exists: false
+  condition: login_profile and succeeded
+falsepositives:
+  - Admins onboarding a new person who needs console access; match against HR or ticket records
+level: medium

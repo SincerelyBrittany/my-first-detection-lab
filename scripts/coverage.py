@@ -20,6 +20,10 @@ PLANNED = {
     "T1021.001": "Remote Desktop lateral movement",
     "T1047": "WMI execution",
     "T1070.001": "Windows event logs cleared",
+    "T1003.003": "Domain credential dump (ntdsutil, NTDS.dit access)",
+    "T1548.002": "UAC bypass (fodhelper, eventvwr registry tricks)",
+    "T1580": "Cloud infrastructure discovery (burst of Describe*/List* calls; needs aggregation)",
+    "T1530": "Data from cloud storage (bulk S3 GetObject; needs aggregation)",
 }
 
 

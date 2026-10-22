@@ -1,0 +1,10 @@
+{
+  "EventID": 4740,
+  "Channel": "Security",
+  "Computer": "WIN-LAB01",
+  "TimeCreated": "2026-10-22T13:10:04.221Z",
+  "Provider_Name": "Microsoft-Windows-Security-Auditing",
+  "TargetUserName": "jsmith",
+  "SubjectUserName": "WIN-DC01$",
+  "TargetDomainName": "WIN-LAB01"
+}

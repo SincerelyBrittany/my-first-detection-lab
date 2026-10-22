@@ -1,0 +1,9 @@
+{
+  "EventID": 1102,
+  "Channel": "Security",
+  "Computer": "WIN-LAB01",
+  "TimeCreated": "2026-10-22T13:10:04.221Z",
+  "Provider_Name": "Microsoft-Windows-Eventlog",
+  "SubjectUserName": "analyst",
+  "SubjectDomainName": "LAB"
+}
