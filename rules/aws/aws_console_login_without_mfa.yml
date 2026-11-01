@@ -1,0 +1,32 @@
+title: AWS Console Login Without MFA
+id: 22f40ee1-2b80-4164-8805-2ebeffe83fb2
+status: experimental
+description: |
+  A successful AWS console sign-in by an IAM user or the root user without MFA. A stolen
+  password alone is enough to get in, so every console user should have MFA. Federated/SSO
+  logins are excluded because MFA is enforced by the identity provider, not AWS.
+references:
+  - https://attack.mitre.org/techniques/T1078/004/
+  - https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-event-reference-aws-console-sign-in-events.html
+author: Sincerely Brittany
+date: 2026-10-22
+tags:
+  - attack.initial-access
+  - attack.t1078.004
+logsource:
+  product: aws
+  service: cloudtrail
+detection:
+  console_login:
+    eventSource: signin.amazonaws.com
+    eventName: ConsoleLogin
+    responseElements.ConsoleLogin: Success
+    additionalEventData.MFAUsed: 'No'
+  password_user:
+    userIdentity.type:
+      - IAMUser
+      - Root
+  condition: console_login and password_user
+falsepositives:
+  - Accounts that haven't enrolled MFA yet; treat each one as a finding to fix, not just to close
+level: medium

@@ -39,7 +39,8 @@ To test the LSASS rule, add a `ProcessAccess` include for `TargetImage` ending i
 1. Install Splunk Enterprise on your Mac or a second VM and switch the license to Free.
 2. Install the Splunk Universal Forwarder on the Windows VM.
 3. In the forwarder's `inputs.conf`, collect
-   `WinEventLog://Microsoft-Windows-Sysmon/Operational` with `renderXml = false`.
+   `WinEventLog://Microsoft-Windows-Sysmon/Operational` and `WinEventLog://Security`,
+   both with `renderXml = false`.
 4. Install the **Splunk Add-on for Sysmon** so fields like `Image` and `CommandLine` are extracted.
 
 **Elastic** (if you'd rather): run Elasticsearch and Kibana with Docker, then install
@@ -79,6 +80,8 @@ Invoke-AtomicTest T1059.001 -TestNumbers 1 -Cleanup
 | PowerShell encoded command | T1059.001 |
 | LSASS memory access | T1003.001 |
 | Suspicious scheduled task | T1053.005 |
+| Account lockout | T1110.001 (set an account lockout policy first: `net accounts /lockoutthreshold:5`) |
+| Security log cleared | T1070.001 |
 
 Restore the `clean` snapshot when you're done.
 
@@ -99,7 +102,12 @@ aws iam attach-user-policy --user-name lab-backdoor \
 aws cloudtrail stop-logging --name <your-trail>
 aws cloudtrail start-logging --name <your-trail>
 
+# T1098: give the user a console password (and T1078.004: sign in with it, no MFA)
+aws iam create-login-profile --user-name lab-backdoor --password '<a strong temporary password>'
+# Now sign in at https://<account-id>.signin.aws.amazon.com/console as lab-backdoor
+
 # Clean up
+aws iam delete-login-profile --user-name lab-backdoor
 aws iam detach-user-policy --user-name lab-backdoor \
   --policy-arn arn:aws:iam::aws:policy/AdministratorAccess
 aws iam delete-user --user-name lab-backdoor

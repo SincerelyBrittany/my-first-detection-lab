@@ -1,0 +1,24 @@
+title: Windows Security Event Log Cleared
+id: f077e8a3-5ab1-4d10-a7bd-c50852a83da5
+status: experimental
+description: |
+  The Security event log was cleared (Event ID 1102). Attackers clear logs to erase evidence
+  of what they did. Admins almost never need to, so this is a high-signal event.
+references:
+  - https://attack.mitre.org/techniques/T1070/001/
+  - https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1070.001/T1070.001.md
+author: Sincerely Brittany
+date: 2026-10-22
+tags:
+  - attack.defense-evasion
+  - attack.t1070.001
+logsource:
+  product: windows
+  service: security
+detection:
+  cleared:
+    EventID: 1102
+  condition: cleared
+falsepositives:
+  - A lab or test machine being reset; a documented admin action
+level: high

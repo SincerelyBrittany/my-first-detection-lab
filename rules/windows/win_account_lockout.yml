@@ -1,0 +1,27 @@
+title: Windows Account Locked Out After Failed Logons
+id: 67d3bd4b-ee3f-4a30-8a0a-4eb0ca129531
+status: experimental
+description: |
+  An account was locked out (Security Event ID 4740), which means it hit the lockout
+  threshold of failed logons. One lockout is often a forgotten password; several across
+  different accounts in a short time points to password guessing or spraying.
+  Counting raw failed logons (4625) needs an aggregation rule; the lockout event is the
+  signal Windows has already aggregated for you.
+references:
+  - https://attack.mitre.org/techniques/T1110/
+  - https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4740
+author: Sincerely Brittany
+date: 2026-10-22
+tags:
+  - attack.credential-access
+  - attack.t1110
+logsource:
+  product: windows
+  service: security
+detection:
+  lockout:
+    EventID: 4740
+  condition: lockout
+falsepositives:
+  - Users who forgot or recently changed a password; a stale password saved on a phone or mapped drive
+level: medium
